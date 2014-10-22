@@ -27,8 +27,10 @@ int main() {
 '		> ${name}.c
 
 	echo '
-bin= '${name}'
-$(bin): $(bin).c
+name= '${name}'
+src= $(name).c
+bin= $(name).out
+$(bin): $(src)
 	gcc -o $@ $^
 clean:
 	rm $(bin)
