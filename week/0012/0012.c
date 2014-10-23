@@ -8,9 +8,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #define N 101
 #define M 101
-#define E 200
 
 struct tree_node;
 
@@ -21,29 +21,21 @@ struct list_node{
 
 struct list{
 	struct list_node* first;
-	struct list_node* last;
-	int size;
 };
 
 struct tree_node{
 	int color;
 	int number;
 	struct list edges;
+	int f[M];
 };
 
 void add_edge(struct tree_node * a, struct tree_node * b){
 	struct list * plist = &a->edges;
 	struct list_node * node_add  = malloc(sizeof (struct list_node));
-	node_add->next = NULL;
+	node_add->next = plist->first;
 	node_add->data = b;
-	if (plist->first){
-		plist->last->next = node_add;
-		plist->last = node_add;
-	}else{
-		plist->last = node_add;
-		plist->first = node_add;
-	}
-	plist->size++;
+	plist->first = node_add;
 }
 
 int n, m;
@@ -51,10 +43,38 @@ int value[N];
 struct tree_node v[N];
 
 void travel_tree_node(struct tree_node * u){
-	u.color = 1;
+	int i, j;
+	u->color = 1;
 	struct list * plist = &u->edges;
 	struct list_node * p = plist->first;
-	
+	while (p){
+		if (p->data->color == 0){
+			travel_tree_node (p->data);
+		}
+		p = p->next;
+	}
+	u->f[1] = value[u->number];
+	p = plist->first;
+	while (p){
+		if (p->data->color == 2){
+			struct tree_node * v = p->data;
+			for (i=m; i>=2; i--){
+				for (j=1; j<i; j++){
+					int nvalue = v->f[j] + u->f[i-j];
+					if (nvalue > u->f[i]){
+						u->f[i]= nvalue;
+					}
+				}
+			}
+		}
+		p= p->next;
+	}
+/*	printf("%d:", u->number);
+	for (i=1; i<=m; i++)	
+		printf(" %d", u->f[i]);
+	puts("");
+*/
+	u->color = 2;
 }
 
 int main() {
@@ -71,6 +91,7 @@ int main() {
 	}
 
 	travel_tree_node(&v[1]);
+	printf("%d\n", v[1].f[m]);
 	return 0;
 }
 
