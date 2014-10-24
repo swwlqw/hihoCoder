@@ -53,7 +53,8 @@ void travel_tree_node(struct tree_node * u){
 		}
 		p = p->next;
 	}
-	u->f[1] = value[u->number];
+	for (i=1; i<=m; i++)
+		u->f[i] = value[u->number];
 	p = plist->first;
 	while (p){
 		if (p->data->color == 2){
@@ -69,11 +70,11 @@ void travel_tree_node(struct tree_node * u){
 		}
 		p= p->next;
 	}
-/*	printf("%d:", u->number);
-	for (i=1; i<=m; i++)	
-		printf(" %d", u->f[i]);
-	puts("");
-*/
+//	printf("%d:", u->number);
+//	for (i=1; i<=m; i++)	
+//		printf(" %d", u->f[i]);
+//	puts("");
+
 	u->color = 2;
 }
 
